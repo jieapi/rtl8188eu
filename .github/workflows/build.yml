@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -30,7 +29,8 @@ jobs:
         make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KSRC=../kernel_headers
 
     - name: Upload driver artifact
-      uses: actions/upload-artifact@v3
+      # 关键修正：升级到 upload-artifact@v4 并修复路径
+      uses: actions/upload-artifact@v4
       with:
         name: rtl8188eu-driver
-        path: rtl8188eu/rtl8188eu.ko
+        path: rtl8188eu/8188eu.ko  # 注意驱动文件名可能为 8188eu.ko 而非 rtl8188eu.ko
