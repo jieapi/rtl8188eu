@@ -25,7 +25,7 @@ jobs:
 
     - name: Compile driver
       run: |
-        make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KSRC=../kernel_headers
+        make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KSRC=./kernel_headers
 
     - name: Upload driver artifact
       # 关键修正：升级到 upload-artifact@v4 并修复路径
