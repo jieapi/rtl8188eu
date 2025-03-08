@@ -3,24 +3,30 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:  # 必须添加权限
+      contents: write  # 允许上传 Artifacts
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # 使用 v4 版本
 
       - name: Install dependencies
         run: |
           sudo apt-get update
+          # 安装 aarch64 内核头文件和工具链
           sudo apt-get install -y linux-headers-arm64 \
               gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
 
       - name: Build driver
         run: |
+          make clean
           make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
               KSRC=/usr/src/linux-headers-6.8.0-1021-arm64 \
               CONFIG_FTRACE=n CONFIG_MCOUNT=n
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # 必须升级到 v4
         with:
           name: rtl8188eu-driver
-          path: "*.ko"
+          path: |
+            *.ko  # 确保路径匹配编译产物
+            rtl8188eufw.bin  # 固件文件
