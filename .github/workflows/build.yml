@@ -1,0 +1,24 @@
+name: Build RTL8188EU Driver for aarch64
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential git linux-headers-generic crossbuild-essential-arm64
+
+      - name: Setup aarch64 toolchain
+        run: |
+          echo "ARCH=arm64" >> $GITHUB_ENV
+          echo "CROSS_COMPILE=aarch64-linux-gnu-" >> $GITHUB_ENV
+
+      - name: Build driver
+        run: |
+          make clean
+          make KSRC=/lib/modules/$(uname -r)/build
+          make install
